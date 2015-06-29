@@ -5,8 +5,7 @@ class Board
 
   def initialize
     @grid = new_grid
-
-    # seed_bombs
+    seed_bombs
   end
 
   def tile_coordinates(tile)
@@ -18,11 +17,15 @@ class Board
   end
 
   def new_grid
-    Array.new(9) do
-      Array.new(9) do
-        bomb = rand(49) < 1
-        Tile.new(bomb, self)
-      end
+    Array.new(9) {Array.new(9) {Tile.new(self)}}
+  end
+
+  def seed_bombs
+    bomb_count = Math.sqrt(grid.flatten.size).to_i
+    bomb_count.times do
+      pos = [rand(9), rand(9)]
+      pos = [rand(9), rand(9)] until !self[pos].bombed?
+      self[pos].set_bomb
     end
   end
 
@@ -41,22 +44,15 @@ class Board
   end
 
   def bombs_flags_matched?
-    grid.each do |row|
-      row.each do |tile|
-        return false if tile.bombed? && !tile.flagged?
-      end
-    end
-    true
+    grid.flatten.none? { |tile| tile.bombed? && !tile.flagged? }
   end
 
   def safe_spots_revealed?
-    grid.flatten.all? do |tile| !tile.bombed? && tile.revealed?
+    grid.flatten.all? { |tile| !tile.bombed? && tile.revealed? }
   end
 
   def all_revealed?
-    grid.each do |row|
-      row.each { |cell| return false if !cell.revealed }
-    end
+    grid.flatten.all? { |tile| tile.revealed }
   end
 
 
@@ -65,7 +61,7 @@ class Board
     if self[pos].bombed?
       reveal_bomb
     elsif value > 0
-      reveal_number(pos)
+      self[pos].reveal
     else
       reveal_tiles(pos)
     end
@@ -81,16 +77,8 @@ class Board
     end
   end
 
-  def reveal_bomb
-    @grid.each do |row|
-      row.each do |cell|
-        cell.reveal
-      end
-    end
-  end
-
-  def reveal_number(pos)
-    self[pos].reveal
+  def reveal_game_lost
+    @grid.flatten.each  { |tile| tile.reveal}
   end
 
   def render

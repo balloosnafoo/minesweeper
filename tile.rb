@@ -1,7 +1,7 @@
 require "byebug"
 class Tile
-  attr_reader :bomb, :board, :revealed, :value
-  attr_accessor :flagged
+  attr_reader  :board, :revealed, :value
+  attr_accessor :flagged, :bomb
 
   def initialize(bomb = false, board)
     @revealed = false
@@ -39,6 +39,10 @@ class Tile
       end
     end
     tiles
+  end
+
+  def set_bomb
+    self.bomb = true
   end
 
   def valid_pos?(pos)
