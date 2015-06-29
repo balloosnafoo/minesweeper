@@ -49,7 +49,6 @@ class Board
   end
 
   def safe_spots_revealed?
-    p grid.flatten.none? { |tile| !tile.bombed? && !tile.revealed }
     grid.flatten.none? { |tile| !tile.bombed? && !tile.revealed }
   end
 

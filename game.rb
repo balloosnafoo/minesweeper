@@ -1,5 +1,5 @@
 require_relative "board"
-require 'YAML'
+require 'yaml'
 require_relative "score_board"
 
 class Minesweeper
@@ -71,9 +71,7 @@ if __FILE__ == $PROGRAM_NAME
   puts "Load from file?(y/n) "
   if gets.chomp == "y"
     game = YAML.load_file("minesweeper-save.yml")
-    game.run
   else
     game = Minesweeper.new
-    game.run
   end
 end
