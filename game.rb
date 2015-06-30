@@ -1,5 +1,6 @@
 require_relative "board"
 require 'YAML'
+require_relative "score_board"
 
 class Minesweeper
   attr_reader :board
@@ -7,6 +8,7 @@ class Minesweeper
   def initialize
     @board = Board.new
     @seconds = 0
+    @score_board = YAML.load_file("score_board.yml")
     run
   end
 
@@ -29,6 +31,10 @@ class Minesweeper
     end
     board.render
     if game_won?
+      @seconds += (Time.now - time).to_i
+      @score_board.add_record(@seconds)
+      @score_board.render
+      File.open("score_board.yml", "w") { |f| f.puts @score_board.to_yaml }
       puts "Congratulations you won"
     else
       puts "You died"
@@ -59,6 +65,9 @@ class Minesweeper
 end
 
 if __FILE__ == $PROGRAM_NAME
+  if !File.exist?("score_board.yml")
+    File.open("score_board.yml", "w") { |f| f.puts Scoreboard.new.to_yaml }
+  end
   puts "Load from file?(y/n) "
   if gets.chomp == "y"
     game = YAML.load_file("minesweeper-save.yml")

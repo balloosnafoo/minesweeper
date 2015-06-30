@@ -22,7 +22,8 @@ class Board
 
   def seed_bombs
     bomb_count = Math.sqrt(grid.flatten.size).to_i
-    bomb_count.times do
+    # bomb_count.times do
+    1.times do
       pos = [rand(9), rand(9)]
       pos = [rand(9), rand(9)] until !self[pos].bombed?
       self[pos].set_bomb
@@ -48,7 +49,8 @@ class Board
   end
 
   def safe_spots_revealed?
-    grid.flatten.all? { |tile| !tile.bombed? && tile.revealed? }
+    p grid.flatten.none? { |tile| !tile.bombed? && !tile.revealed }
+    grid.flatten.none? { |tile| !tile.bombed? && !tile.revealed }
   end
 
   def all_revealed?
