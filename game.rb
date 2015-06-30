@@ -6,14 +6,17 @@ class Minesweeper
 
   def initialize
     @board = Board.new
+    @seconds = 0
     run
   end
 
   def run
+    time = Time.now
     until game_won? || game_lost?
       board.render
       save_game = get_save_request
       if save_game == "y"
+        @seconds += (Time.now - time).to_i
         File.open("minesweeper-save.yml", "w") { |f| f.puts self.to_yaml }
         exit
       end
