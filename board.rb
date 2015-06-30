@@ -59,7 +59,7 @@ class Board
   def reveal_pos(pos)
     value = self[pos].neighbor_bomb_count
     if self[pos].bombed?
-      reveal_bomb
+      reveal_game_lost
     elsif value > 0
       self[pos].reveal
     else

@@ -1,4 +1,5 @@
 require_relative "board"
+require 'YAML'
 
 class Minesweeper
   attr_reader :board
@@ -11,6 +12,11 @@ class Minesweeper
   def run
     until game_won? || game_lost?
       board.render
+      save_game = get_save_request
+      if save_game == "y"
+        File.open("minesweeper-save.yml", "w") { |f| f.puts self.to_yaml }
+        exit
+      end
       position, action = get_input
       if action == "f"
         board.flag_pos(position)
@@ -24,6 +30,11 @@ class Minesweeper
     else
       puts "You died"
     end
+  end
+
+  def get_save_request
+    puts "Do you want to save and exit?(y/n) "
+    gets.chomp
   end
 
   def game_won?
@@ -42,4 +53,15 @@ class Minesweeper
     [position, action]
   end
 
+end
+
+if __FILE__ == $PROGRAM_NAME
+  puts "Load from file?(y/n) "
+  if gets.chomp == "y"
+    game = YAML.load_file("minesweeper-save.yml")
+    game.run
+  else
+    game = Minesweeper.new
+    game.run
+  end
 end
