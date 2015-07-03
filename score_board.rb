@@ -7,7 +7,6 @@ class Scoreboard
   end
 
   def add_record(time)
-    puts caller
     puts "What is your name? "
     name = gets.chomp
     @board << {:name => name, :time => time}

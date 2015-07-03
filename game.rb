@@ -31,14 +31,18 @@ class Minesweeper
     end
     board.render
     if game_won?
-      @seconds += (Time.now - time).to_i
-      @score_board.add_record(@seconds)
-      @score_board.render
-      File.open("score_board.yml", "w") { |f| f.puts @score_board.to_yaml }
-      puts "Congratulations you won"
+      handle_won_game(time)
     else
       puts "You died"
     end
+  end
+
+  def handle_won_game(time)
+    @seconds += (Time.now - time).to_i
+    @score_board.add_record(@seconds)
+    @score_board.render
+    File.open("score_board.yml", "w") { |f| f.puts @score_board.to_yaml }
+    puts "Congratulations you won"
   end
 
   def get_save_request

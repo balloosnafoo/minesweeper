@@ -1,4 +1,3 @@
-require "byebug"
 class Tile
   attr_reader  :board, :revealed, :value
   attr_accessor :flagged, :bomb
@@ -30,7 +29,6 @@ class Tile
   def neighbors
     tiles = []
     DELTAS.each do |pos|
-      #debugger
       row1, col1 = board.tile_coordinates(self)
       row2, col2 = pos
       pos = [row1 + row2, col1 + col2]
@@ -51,11 +49,7 @@ class Tile
   end
 
   def neighbor_bomb_count
-    count = 0
-    # n = neighbors
-    neighbors.each {|neighbor| count += 1 if neighbor.bombed? }
-    # neighbors.inject(0) { |count, neighbor| neighbor.bombed? ? count + 1 : count }
-    count
+    neighbors.inject(0) { |count, neighbor| neighbor.bombed? ? count + 1 : count }
   end
 
   def to_s
